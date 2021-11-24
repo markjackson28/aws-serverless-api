@@ -7,50 +7,52 @@ exports.handler = async (event) => {
 
   console.log('EVENT', event);
 
-  try {
+  if (event.httpMethod === 'POST') {
+    try {
+      const { name, phone } = JSON.parse(event.body);
+      const id = uuid();
 
-    // either there is or is not an id
-    const id = event.pathParameters && event.pathParameters.id;
+      const record = new peopleModel({ id, name });
+      console.log('RECORD', record);
 
-    let data;
+      const data = await record.save();
 
-    if (id) {
-      const list = await peopleModel.query('id').eq(id).exec();
-      console.log('LIST', list);
-      data = list[0];
-    } else {
-      data = await peopleModel.scan().exec();
+      return {
+        statusCode: 200,
+        body: JSON.stringify(data),
+      };
+
+    } catch (err) {
+      return {
+        statusCode: 500,
+        response: err.message,
+      };
     }
-    return {
-      statusCode: 200,
-      body: JSON.stringify(data),
-    }
+  } else if (event.httpMethod === 'GET') {
+    try {
+      // either there is or is not an id
+      const id = event.pathParameters && event.pathParameters.id;
 
-  } catch (err) {
-    return {
-      statusCode: 500,
-      response: err.message
+      let data;
+
+      if (id) {
+        const list = await peopleModel.query('id').eq(id).exec();
+        console.log('LIST', list);
+        data = list[0];
+      } else {
+        data = await peopleModel.scan().exec();
+      }
+      return {
+        statusCode: 200,
+        body: JSON.stringify(data),
+      }
+
+    } catch (err) {
+      return {
+        statusCode: 500,
+        response: err.message
+      }
     }
   }
 
-  // try {
-  //   const { name, phone } = JSON.parse(event.body);
-  //   const id = uuid();
-
-  //   const record = new peopleModel({ id, name });
-  //   console.log('RECORD', record);
-
-  //   const data = await record.save();
-
-  //   return {
-  //     statusCode: 200,
-  //     body: JSON.stringify(data),
-  //   };
-
-  // } catch (err) {
-  //   return {
-  //     statusCode: 500,
-  //     response: err.message,
-  //   };
-  
 };
