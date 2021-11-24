@@ -52,5 +52,5 @@ exports.handler = async (event) => {
   //     statusCode: 500,
   //     response: err.message,
   //   };
-  }
+  
 };
