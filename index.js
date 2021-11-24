@@ -1,6 +1,6 @@
 'use strict';
 
-// let uuid = require('uuid').v4;
+let uuid = require('uuid').v4;
 let peopleModel = require('./people.schema');
 
 exports.handler = async (event) => {
