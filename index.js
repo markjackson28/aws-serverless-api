@@ -59,9 +59,8 @@ exports.handler = async (event) => {
       const id = event.pathParameters && event.pathParameters.id;
 
       if (id) {
-        const list = await peopleModel.delete({ 'id':id });
-        return list;
-      } 
+        await peopleModel.delete({ 'id': id });
+      }
       return {
         statusCode: 200,
         body: 'Name Deleted',
