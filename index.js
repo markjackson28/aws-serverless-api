@@ -9,7 +9,7 @@ exports.handler = async (event) => {
 
   if (event.httpMethod === 'POST') {
     try {
-      const { name, phone } = JSON.parse(event.body);
+      const { name } = JSON.parse(event.body);
       const id = uuid();
 
       const record = new peopleModel({ id, name });
@@ -45,6 +45,26 @@ exports.handler = async (event) => {
       return {
         statusCode: 200,
         body: JSON.stringify(data),
+      }
+
+    } catch (err) {
+      return {
+        statusCode: 500,
+        response: err.message
+      }
+    }
+  } else if (event.httpMethod === 'DELETE') {
+    try {
+      // either there is or is not an id
+      const id = event.pathParameters && event.pathParameters.id;
+
+      if (id) {
+        const list = await peopleModel.delete({ 'id':id });
+        return list;
+      } 
+      return {
+        statusCode: 200,
+        body: 'Name Deleted',
       }
 
     } catch (err) {
