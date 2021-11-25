@@ -57,14 +57,14 @@ exports.handler = async (event) => {
       // either there is or is not an id
       const id = event.pathParameters && event.pathParameters.id;
 
-      let data;
+      let updatedPerson; 
 
       if (id) {
-        await peopleModel.update({ 'id': id, 'name': name })
+        updatedPerson = await peopleModel.update({ 'id': id, 'name': name })
       }
       return {
         statusCode: 200,
-        body: JSON.stringify(data),
+        body: `Name updated, ${JSON.stringify(updatedPerson)}`,
       }
 
     } catch (err) {
@@ -78,14 +78,15 @@ exports.handler = async (event) => {
       // either there is or is not an id
       const id = event.pathParameters && event.pathParameters.id;
 
+      let deletedPerson;
+
       if (id) {
-        await peopleModel.delete({ 'id': id });
+        deletedPerson = await peopleModel.delete({ 'id': id });
       }
       return {
         statusCode: 200,
-        body: 'Name Deleted',
+        body: `Name Deleted, ${JSON.stringify(deletedPerson)}`,
       }
-
     } catch (err) {
       return {
         statusCode: 500,
