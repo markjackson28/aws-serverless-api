@@ -13,7 +13,6 @@ exports.handler = async (event) => {
       const id = uuid();
 
       const record = new peopleModel({ id, name });
-      console.log('RECORD', record);
 
       const data = await record.save();
 
@@ -37,10 +36,31 @@ exports.handler = async (event) => {
 
       if (id) {
         const list = await peopleModel.query('id').eq(id).exec();
-        console.log('LIST', list);
         data = list[0];
       } else {
         data = await peopleModel.scan().exec();
+      }
+      return {
+        statusCode: 200,
+        body: JSON.stringify(data),
+      }
+
+    } catch (err) {
+      return {
+        statusCode: 500,
+        response: err.message
+      }
+    }
+  } else if (event.httpMethod === 'PUT') {
+    try {
+      const { name } = JSON.parse(event.body);
+      // either there is or is not an id
+      const id = event.pathParameters && event.pathParameters.id;
+
+      let data;
+
+      if (id) {
+        await peopleModel.update({ 'id': id, 'name': name })
       }
       return {
         statusCode: 200,
