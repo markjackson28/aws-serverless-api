@@ -82,7 +82,7 @@ exports.handler = async (event) => {
 
       if (id) {
         deletedPerson = await peopleModel.delete({ 'id': id });
-        console.log('********', deletedPerson);
+        // console.log('********', deletedPerson);
       }
       return {
         statusCode: 200,
